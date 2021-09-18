@@ -1,0 +1,6 @@
+[submodule "diffvg"]
+	path = diffvg
+	url = https://github.com/BachiLi/diffvg
+[submodule "CLIP"]
+	path = CLIP
+	url = https://github.com/openai/CLIP
