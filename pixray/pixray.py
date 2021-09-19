@@ -411,6 +411,15 @@ def rebuild_optimisers(args):
     return new_opts
 
 
+def get_device(args):
+    if args.device is not None:
+        return args.device
+    elif torch.cuda.is_available():
+        return 'cuda:0'
+    else:
+        return 'cpu'
+
+
 def do_init(args):
     global opts, perceptors, normalize, cutoutsTable, cutoutSizeTable
     global z_orig, z_targets, z_labels, init_image_tensor, target_image_tensor
@@ -430,7 +439,7 @@ def do_init(args):
     random.seed(int_seed)
 
     # Do it (init that is)
-    device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+    device = torch.device(get_device(args))
 
     if args.drawer == "clipdraw":
         drawer = ClipDrawer(args.size[0], args.size[1], args.strokes)
@@ -1207,6 +1216,7 @@ def setup_parser():
     vq_parser.add_argument("-smo",  "--smoothness", type=float, help="encourage smoothness, 0 -- skip", default=0, dest='smoothness')
     vq_parser.add_argument("-est",  "--smoothness_type", type=str, help="enforce smoothness type: default/clipped/log", default='default', dest='smoothness_type')
     vq_parser.add_argument("-sat",  "--saturation", type=float, help="encourage saturation, 0 -- skip", default=0, dest='saturation')
+    vq_parser.add_argument("-dev",  "--device", type=str, help="device to use", default=None, dest='device')
 
     return vq_parser
 
