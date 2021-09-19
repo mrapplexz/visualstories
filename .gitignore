@@ -2,3 +2,7 @@ venv/
 output.*
 __pycache__/
 .idea/
+steps/
+starting_image.png
+output.mp4
+output.png

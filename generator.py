@@ -1,21 +1,16 @@
 from helper import *
 import argparse
 
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument('prompt', metavar='P', type=str, nargs='+',  help='text prompt')
-    args = parser.parse_args()
-    prompt = ' '.join(args.prompt)
 
-    print(f"Generating text for prompt `{prompt}`")
-
+def setup():
     import_stuff()
 
-    import pixray
 
+def generate(prompt, part_n):
+    import pixray
     pixray.reset_settings()
-    pixray.add_settings(prompts=f"{prompt} #pixelart", aspect='widescreen')
-    pixray.add_settings(quality="better", scale=2.5)
+    pixray.add_settings(prompts=f"{prompt} #pixelart", part_n=part_n)
+    pixray.add_settings(aspect='widescreen', quality="better", scale=2.5)
     pixray.add_settings(drawer='pixeldraw')
     pixray.add_settings(display_clear=True)
     pixray.add_settings(make_frames=True)
@@ -23,3 +18,16 @@ if __name__ == '__main__':
     settings = pixray.apply_settings()
     pixray.do_init(settings)
     pixray.do_run(settings)
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--part_n", type=int, help="Part number to save", default=0, dest='part_n')
+    parser.add_argument('prompt', metavar='P', type=str, nargs='+',  help='text prompt')
+    args = parser.parse_args()
+    text_prompt = ' '.join(args.prompt)
+
+    setup()
+
+    print(f"Generating text for prompt `{text_prompt}`")
+    generate(text_prompt, args.part_n)

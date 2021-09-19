@@ -926,7 +926,7 @@ def ascend_txt(args):
     if args.make_video or args.make_frames:
         img = np.array(out.mul(255).clamp(0, 255)[0].cpu().detach().numpy().astype(np.uint8))[:,:,:]
         img = np.transpose(img, (1, 2, 0))
-        imageio.imwrite(f'./steps/frame_{cur_iteration:04d}.png', np.array(img))
+        imageio.imwrite(f'./steps/{args.part_n}/frame_{cur_iteration:04d}.png', np.array(img))
 
     return result
 
@@ -1107,7 +1107,7 @@ def do_video(args):
     frames = []
     tqdm.write('Generating video...')
     for i in range(init_frame,last_frame): #
-        frames.append(Image.open(f'./steps/frame_{i:04d}.png'))
+        frames.append(Image.open(f'./steps/{args.part_n}/frame_{i:04d}.png'))
 
     #fps = last_frame/10
     fps = np.clip(total_frames/length,min_fps,max_fps)
@@ -1196,6 +1196,7 @@ def setup_parser():
     vq_parser.add_argument("-o",    "--output", type=str, help="Output file", default="output.png", dest='output')
     vq_parser.add_argument("-vid",  "--video", type=bool, help="Create video frames?", default=False, dest='make_video')
     vq_parser.add_argument("-frm",  "--frames", type=bool, help="Create video frames only?", default=False, dest='make_frames')
+    vq_parser.add_argument("-pn",   "--part_n", type=int, help="Part number to save", default=0, dest='part_n')
     vq_parser.add_argument("-d",    "--deterministic", type=bool, help="Enable cudnn.deterministic?", default=False, dest='cudnn_determinism')
     vq_parser.add_argument("-dr",   "--drawer", type=str, help="clipdraw, pixeldraw, etc", default="vqgan", dest='drawer')
     vq_parser.add_argument("-st",   "--strokes", type=int, help="clipdraw strokes", default=1024, dest='strokes')
@@ -1463,8 +1464,7 @@ def process_args(vq_parser, namespace=None, do_both=False):
 
     # Make video steps directory
     if args.make_video or args.make_frames:
-        if not os.path.exists('steps'):
-            os.mkdir('steps')
+        os.makedirs(f'steps/{args.part_n}', exist_ok=True)
 
     if args.learning_rate_drops is None:
         args.learning_rate_drops = []
