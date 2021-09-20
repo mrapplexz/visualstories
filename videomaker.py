@@ -23,7 +23,9 @@ def generate_video(timestamps_file: str, output_file: str, fps: int):
                '-y',
                '-f', 'concat',
                '-i', timestamps_file,
-               '-vcodec', 'libx264',
+               '-c:v', 'libx264rgb',
+               '-qp', '0',
+               '-crf', '0',
                '-r', str(fps),
                '-pix_fmt', 'yuv420p',
                '-preset', 'veryslow',
@@ -35,12 +37,18 @@ def upscale_video(input_file: str, output_file: str, target_width: int, target_h
     p = Popen(['ffmpeg',
                '-y',
                '-i', input_file,
+               '-c:v', 'libx264rgb',
+               '-qp', '0',
+               '-crf', '0',
+               '-pix_fmt', 'yuv420p',
                '-vf', f'scale={target_width}:{target_height}:flags=neighbor',
                output_file])
     p.wait()
 
 
 if __name__ == '__main__':
-    generate_timestamps([(5, 105), (2, 106), (10, 102), (4, 103)], 'output.txt', 0.4)
-    generate_video('output.txt', 'output.mp4', 60)
-    upscale_video('output.mp4', 'output_up.mp4', 7680, 4320)
+    generate_timestamps([(5, 105), (2, 106), (10, 102), (4, 103)],  # список из tuple-ов формата (длина куска в секундах, part_n куска)
+                        'output.txt',
+                        0.4)  # время в сек для перехода от первого до последнего фрейма
+    generate_video('output.txt', 'output.mp4', 60)  # fps
+    upscale_video('output.mp4', 'output_up.mp4', 1920, 1080)  # width, height
