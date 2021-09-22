@@ -1,4 +1,4 @@
-from helper import *
+from .helper import *
 import argparse
 
 
@@ -6,10 +6,10 @@ def setup():
     import_stuff()
 
 
-def generate(prompt, part_n, device):
+def generate(prompt, part_n, device, main_dir):
     import pixray
     pixray.reset_settings()
-    pixray.add_settings(prompts=f"{prompt} #pixelart", part_n=part_n, device=device)
+    pixray.add_settings(prompts=f"{prompt} #pixelart", part_n=part_n, main_dir=main_dir, device=device)
     pixray.add_settings(aspect='widescreen', quality="better", scale=2.5)
     pixray.add_settings(drawer='pixeldraw')
     pixray.add_settings(display_clear=True)
@@ -22,13 +22,14 @@ def generate(prompt, part_n, device):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
+    parser.add_argument("--main_dir", type=str, help="Directory to save pictures", default="./steps", dest='main_dir')
     parser.add_argument("--part_n", type=int, help="Part number to save", default=0, dest='part_n')
     parser.add_argument("--device", type=str, help="Device to use", default=None, dest='device')
-    parser.add_argument('prompt', metavar='P', type=str, nargs='+',  help='text prompt')
+    parser.add_argument('prompt', metavar='P', type=str, nargs='+', help='text prompt')
     args = parser.parse_args()
     text_prompt = ' '.join(args.prompt)
 
     setup()
 
     print(f"Generating text for prompt `{text_prompt}`")
-    generate(text_prompt, args.part_n, args.device)
+    generate(text_prompt, args.part_n, args.device, args.main_dir)

@@ -164,7 +164,7 @@ def gradient_3d(width, height, start_list, stop_list, is_horizontal_list):
 
     return result
 
-    
+
 def random_gradient_image(w,h):
     array = gradient_3d(w, h, (0, 0, np.random.randint(0,255)), (np.random.randint(1,255), np.random.randint(2,255), np.random.randint(3,128)), (True, False, False))
     random_image = Image.fromarray(np.uint8(array))
@@ -297,7 +297,7 @@ class MakeCutouts(nn.Module):
         self.augs_wide = nn.Sequential(*augmentations)
 
         self.noise_fac = 0.1
-        
+
         # Pooling
         self.av_pool = nn.AdaptiveAvgPool2d((self.cut_size, self.cut_size))
         self.max_pool = nn.AdaptiveMaxPool2d((self.cut_size, self.cut_size))
@@ -364,7 +364,7 @@ class MakeCutouts(nn.Module):
             #         TF.to_pil_image(batch[j_wide].cpu()).save(f"live_im_{cur_iteration:02d}_{j_wide:02d}_{spot}.png")
 
         # print(batch.shape, self.transforms.shape)
-        
+
         if self.noise_fac:
             facs = batch.new_empty([self.cutn, 1, 1, 1]).uniform_(0, self.noise_fac)
             batch = batch + facs * torch.randn_like(batch)
@@ -472,7 +472,7 @@ def do_init(args):
 
         cut_size = perceptor.visual.input_resolution
         cutoutSizeTable[clip_model] = cut_size
-        if not cut_size in cutoutsTable:    
+        if not cut_size in cutoutsTable:
             make_cutouts = MakeCutouts(cut_size, args.num_cuts, cut_pow=args.cut_pow)
             cutoutsTable[cut_size] = make_cutouts
 
@@ -669,8 +669,8 @@ cutoutSizeTable = {}
 init_image_tensor = None
 target_image_tensor = None
 pmsTable = None
-spotPmsTable = None 
-spotOffPmsTable = None 
+spotPmsTable = None
+spotOffPmsTable = None
 pmsImageTable = None
 gside_X=None
 gside_Y=None
@@ -681,7 +681,7 @@ cur_anim_index=None
 anim_output_files=[]
 anim_cur_zs=[]
 anim_next_zs=[]
-best_loss = None 
+best_loss = None
 best_iter = None
 best_z = None
 num_loss_drop = 0
@@ -935,7 +935,7 @@ def ascend_txt(args):
     if args.make_video or args.make_frames:
         img = np.array(out.mul(255).clamp(0, 255)[0].cpu().detach().numpy().astype(np.uint8))[:,:,:]
         img = np.transpose(img, (1, 2, 0))
-        imageio.imwrite(f'./steps/{args.part_n}/frame_{cur_iteration:04d}.png', np.array(img))
+        imageio.imwrite(f'{args.main_dir}/{args.part_n}/frame_{cur_iteration:04d}.png', np.array(img))
 
     return result
 
@@ -958,7 +958,7 @@ def re_average_z(args):
 def train(args, cur_it):
     global drawer, opts
     global best_loss, best_iter, best_z, num_loss_drop, max_loss_drops, iter_drop_delay
-    
+
     rebuild_opts_when_done = False
 
     for opt in opts:
@@ -1172,7 +1172,7 @@ def setup_parser():
     vq_parser.add_argument("-asp",  "--aspect", type=str, help="widescreen, square", default="widescreen", dest='aspect')
     vq_parser.add_argument("-ezs",  "--ezsize", type=str, help="small, medium, large", default=None, dest='ezsize')
     vq_parser.add_argument("-sca",  "--scale", type=float, help="scale (instead of ezsize)", default=None, dest='scale')
-    vq_parser.add_argument("-ova",  "--overlay_alpha", type=int, help="Overlay alpha (0-255)", default=None, dest='overlay_alpha')    
+    vq_parser.add_argument("-ova",  "--overlay_alpha", type=int, help="Overlay alpha (0-255)", default=None, dest='overlay_alpha')
     vq_parser.add_argument("-s",    "--size", nargs=2, type=int, help="Image size (width height)", default=None, dest='size')
     vq_parser.add_argument("-ps",   "--pixel_size", nargs=2, type=int, help="Pixel size (width height)", default=None, dest='pixel_size')
     vq_parser.add_argument("-psc",  "--pixel_scale", type=float, help="Pixel scale", default=None, dest='pixel_scale')
@@ -1182,7 +1182,7 @@ def setup_parser():
     vq_parser.add_argument("-ti",   "--target_images", type=str, help="Target images", default=None, dest='target_images')
     vq_parser.add_argument("-tiw",  "--target_image_weight", type=float, help="Target images weight", default=1.0, dest='target_image_weight')
     vq_parser.add_argument("-twp",  "--target_weight_pix", type=float, help="Target weight pix loss", default=0., dest='target_weight_pix')
-    vq_parser.add_argument("-anim", "--animation_dir", type=str, help="Animation output dir", default=None, dest='animation_dir')    
+    vq_parser.add_argument("-anim", "--animation_dir", type=str, help="Animation output dir", default=None, dest='animation_dir')
     vq_parser.add_argument("-ana",  "--animation_alpha", type=int, help="Forward blend for consistency", default=128, dest='animation_alpha')
     vq_parser.add_argument("-iw",   "--init_weight", type=float, help="Initial weight (main=spherical)", default=None, dest='init_weight')
     vq_parser.add_argument("-iwd",  "--init_weight_dist", type=float, help="Initial weight dist loss", default=0., dest='init_weight_dist')
@@ -1356,7 +1356,7 @@ def process_args(vq_parser, namespace=None, do_both=False):
       args = vq_parser.parse_args()
     elif do_both:
       # sometimes there are both settings and cmd line
-      args = vq_parser.parse_args(namespace=namespace)        
+      args = vq_parser.parse_args(namespace=namespace)
     else:
       # notebook, ignore ARGV and use dictionary instead
       args = vq_parser.parse_args(args=[], namespace=namespace)
@@ -1544,7 +1544,7 @@ def command_line_override():
     return settings
 
 def main():
-    settings = apply_settings()    
+    settings = apply_settings()
     do_init(settings)
     do_run(settings)
 
