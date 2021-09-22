@@ -1,7 +1,7 @@
 import string
 import math
 
-alphabet = set(string.ascii_letters + "'")
+alphabet = set(string.ascii_letters + "',.?!")
 
 
 # 8 слов на сэмпл

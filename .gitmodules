@@ -4,3 +4,6 @@
 [submodule "CLIP"]
 	path = image_generation/CLIP
 	url = https://github.com/openai/CLIP
+[submodule "tts_generation/FastSpeech2"]
+	path = tts_generation/FastSpeech2
+	url = git@github.com:ming024/FastSpeech2.git
