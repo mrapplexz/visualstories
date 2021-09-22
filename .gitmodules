@@ -1,6 +1,6 @@
 [submodule "diffvg"]
-	path = diffvg
+	path = image_generation/diffvg
 	url = https://github.com/BachiLi/diffvg
 [submodule "CLIP"]
-	path = CLIP
+	path = image_generation/CLIP
 	url = https://github.com/openai/CLIP
