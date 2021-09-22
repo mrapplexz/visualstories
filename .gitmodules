@@ -4,6 +4,12 @@
 [submodule "CLIP"]
 	path = image_generation/CLIP
 	url = https://github.com/openai/CLIP
-[submodule "tts_generation/FastSpeech2"]
+[submodule "FastSpeech2"]
 	path = tts_generation/FastSpeech2
 	url = git@github.com:ming024/FastSpeech2.git
+[submodule "jukebox-opt"]
+	path = music_generation/jukebox-opt
+	url = git@github.com:craftmine1000/jukebox-opt.git
+[submodule "perlin-numpy"]
+	path = image_generation/perlin-numpy
+	url = git@github.com:pvigier/perlin-numpy.git
