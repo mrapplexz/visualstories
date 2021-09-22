@@ -47,3 +47,14 @@ cd music_generation
 cd ..
 python3 generate_music.py country john_denver
 ```
+
+# Part 5
+
+## Video generation
+
+```
+cd video_generation
+./install.sh
+cd ..
+python3 generate_video.py ./frames ./tts ./music ./tmp/prepared_frames ./video/video.avi
+```
