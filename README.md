@@ -6,7 +6,7 @@
 ```
 git clone git@github.com:mrapplexz/aiijc-creative-imagegen.git
 cd aiijc-creative-imagegen
-git submodule update --init --recursive
+./install.sh
 ```
 
 # Part 1
@@ -14,13 +14,19 @@ git submodule update --init --recursive
 ## Text generation
 
 If your host doesn't provide access to huggingface hub, download 
-`pytorch_model.bin`,`tokenizer_config.json`,`vocab.json`,`config.json`,`special_tokens_map.json` [here](https://huggingface.co/EleutherAI/gpt-neo-2.7B) before
-and put them to `./text_generaion/EleutherAI/gpt-neo-2.7B`
+`pytorch_model.bin`,`tokenizer_config.json`,`vocab.json`,`config.json`,`special_tokens_map.json`, `merges.txt` [here](https://huggingface.co/EleutherAI/gpt-neo-2.7B) before
+and start with  `--local_model MODEL_PATH`
 ```
-cd text_generation
-./install.sh
-cd ..
-python3 generate_text.py cuda:0 ./texts/text.txt 
+text_generation/text_generation_env/bin/python3 generate_text.py --device cuda:0 
+                                                                 --output_file_name ./output/texts/text.txt 
+                                                                 --temperature 0.1
+                                                                 --top_k 10000
+                                                                 --top_p 0.95
+                                                                 --repetition_penalty 5.0
+                                                                 --max_length 1000
+                                                                 --seed 42
+                                                                 --start "The kingdom and a princess"
+                                                                 --genre fairy_tale
 ```
 
 # Part 2

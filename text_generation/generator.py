@@ -1,9 +1,9 @@
 import numpy as np
 import torch
-from transformers import AutoModelWithLMHead
+from transformers import AutoModelForCausalLM
 from transformers import AutoTokenizer
 
-from config import available_genres
+from .config import available_genres
 
 
 # todo: add more genres
@@ -14,9 +14,9 @@ def get_prefix_for_genre(genre):
 def generate(args):
     np.random.seed(args.seed)
     torch.manual_seed(args.seed)
-
-    tokenizer = AutoTokenizer.from_pretrained("EleutherAI/gpt-neo-2.7B")
-    model = AutoModelWithLMHead.from_pretrained("EleutherAI/gpt-neo-2.7B")
+    model_path_or_name = args.local_model or "EleutherAI/gpt-neo-2.7B"
+    tokenizer = AutoTokenizer.from_pretrained(model_path_or_name)
+    model = AutoModelForCausalLM.from_pretrained(model_path_or_name)
     model.to(args.device)
     prefix = get_prefix_for_genre(args.genre)
     data = f"""{prefix} {args.start}"""
@@ -29,4 +29,4 @@ def generate(args):
                          top_p=args.top_p,
                          temperature=args.temperature)
     decoded = tokenizer.decode(out[0])
-    return decoded[len(prefix):]
+    return decoded[len(prefix) + 1:]
