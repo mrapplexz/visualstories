@@ -1,42 +1,46 @@
+import os
 import subprocess
 from pydub import AudioSegment
 
 
-#todo: not working at all
 def generate(args):
+    frame_dirs = os.listdir(args.frame_dir)
     lr = lambda *x: list(range(*x))
-    a = 0
-    for i, j in enumerate(sentences):
-        time = 10
-        frs = time * 30
-        # 300
-        # 400 sp * 2 = 800
-        # первые 200 каждая 4я = 50
-        # следующие 100 каждая 2я = 50
-        # следующие 100 каждая = 100
-        # потом 400 каждая 4я = 100
-        path = f"../aiijc-creative-imagegen/steps/steps/{i}/"
-        data = lr(0, 200, 4) + lr(200, 300, 2) + lr(300, 400, 1) + lr(399, -1, -4)
-        for k in data:
-            subprocess.run(f"cp {path}frame_{str(k).zfill(4)}.png ../ready/here_{a}.png", shell=True)
-            a += 1
+    time = 6  # time of every picture
+    total_time_in_ms = len(frame_dirs) * time * 1000
+    frs = time * 50
+    # we need 300 frames
+    # but we have 400 * 2 = 800
+    # first 200 every 4th = 50
+    # next 100 every 2nd = 50
+    # next 100 every 1st = 100
+    # then reverse 400 every 4th = 100
+    frame_enumeration = lr(0, 200, 4) + lr(200, 300, 2) + lr(300, 400, 1) + lr(399, -1, -4)
+    frame_index = 0
+    for fd in frame_dirs:
+        path = f"{args.frame_dir}/{fd}"
+        for local_frame_index in frame_enumeration:
+            subprocess.run(
+                f"cp {path}/frame_{str(local_frame_index).zfill(4)}.png {args.temp_dir}/prepared_frames/new_frame_{frame_index}.png",
+                shell=True)
+            frame_index += 1
 
+    final_audio = AudioSegment.silent(0)
 
-    final = AudioSegment.silent(0)
-
-    for i, j in tqdm(enumerate(sentences)):
-        fn = f"""output/result/LibriTTS/{j.replace('"', ' ')}.wav"""
+    for i in range(len(frame_dirs)):
+        fn = f"""{args.tts_dir}/{i}.wav"""
         seg = AudioSegment.from_file(fn, format="wav")
-        sil_duration = (6000 - len(seg)) / 2
+        sil_duration = (time * 1000 - len(seg)) / 2
         silence = AudioSegment.silent(sil_duration)
-        final += silence + seg + silence
-    music = AudioSegment.from_file("item_2.wav", format="wav")[4000:]
+        final_audio += silence + seg + silence  # left and right padding for exact time
 
-    music = music + music + music + music + music + music + music + music + music
-    music = music[:len(final)]
-    final = final.overlay(music, position=0)
-    final = final[:300 * 36 * 1000 // 50]
-    print(len(final))
-    final.export("../audio/ready.wav", format="wav")
+    music = AudioSegment.from_file(f"{args.music_dir}/item_2.wav", format="wav")  # todo: level of music
 
-    subprocess.run("ffmpeg -i ../audio/ready.wav -framerate 50  -i here_%d.png -q:v 6 video_name.avigit ")
+    final_audio = final_audio.overlay(music, position=0, loop=True)
+    final_audio = final_audio[:total_time_in_ms]
+
+    audio_path = f"{args.temp_dir}/final_audio.wav"
+    final_audio.export(audio_path, format="wav")
+
+    frame_path = f"{args.temp_dir}/prepared_frames/new_frame_%d.png"
+    subprocess.run(f"ffmpeg -i {audio_path} -framerate 50  -i {frame_path} -q:v {args.quality} {args.video_name}")

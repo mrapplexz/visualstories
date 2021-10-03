@@ -13,6 +13,9 @@ git submodule update --init --recursive
 
 ## Text generation
 
+If your host doesn't provide access to huggingface hub, download 
+`pytorch_model.bin`,`tokenizer_config.json`,`vocab.json`,`config.json`,`special_tokens_map.json` [here](https://huggingface.co/EleutherAI/gpt-neo-2.7B) before
+and put them to `./text_generaion/EleutherAI/gpt-neo-2.7B`
 ```
 cd text_generation
 ./install.sh
