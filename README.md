@@ -1,5 +1,14 @@
 # VideoStories generation
 
+# Part 0
+
+## Preparation
+```
+git clone git@github.com:mrapplexz/aiijc-creative-imagegen.git
+cd aiijc-creative-imagegen
+git submodule update --init --recursive
+```
+
 # Part 1
 
 ## Text generation

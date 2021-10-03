@@ -1,9 +1,9 @@
 [submodule "diffvg"]
 	path = image_generation/diffvg
-	url = https://github.com/BachiLi/diffvg
+	url = git@github.com:BachiLi/diffvg.git
 [submodule "CLIP"]
 	path = image_generation/CLIP
-	url = https://github.com/openai/CLIP
+	url = git@github.com:openai/CLIP.git
 [submodule "FastSpeech2"]
 	path = tts_generation/FastSpeech2
 	url = git@github.com:ming024/FastSpeech2.git
