@@ -17,15 +17,15 @@ If your host doesn't provide access to huggingface hub, download
 `pytorch_model.bin`,`tokenizer_config.json`,`vocab.json`,`config.json`,`special_tokens_map.json`, `merges.txt` [here](https://huggingface.co/EleutherAI/gpt-neo-2.7B) before
 and start with  `--local_model MODEL_PATH`
 ```
-text_generation/text_generation_env/bin/python3 generate_text.py --device cuda:0 
-                                                                 --output_file_name ./output/texts/text.txt 
-                                                                 --temperature 0.1
-                                                                 --top_k 10000
-                                                                 --top_p 0.95
-                                                                 --repetition_penalty 5.0
-                                                                 --max_length 1000
-                                                                 --seed 42
-                                                                 --start "The kingdom and a princess"
+text_generation/text_generation_env/bin/python3 generate_text.py --device cuda:0                             \
+                                                                 --output_filename ./output/texts/text.txt   \
+                                                                 --temperature 0.1                           \
+                                                                 --top_k 10000                               \
+                                                                 --top_p 0.95                                \
+                                                                 --repetition_penalty 5.0                    \
+                                                                 --max_length 1000                           \
+                                                                 --seed 42                                   \
+                                                                 --start "The kingdom and a princess"        \
                                                                  --genre fairy_tale
 ```
 
@@ -33,15 +33,15 @@ text_generation/text_generation_env/bin/python3 generate_text.py --device cuda:0
 
 ## TTS generation
 
-Before start you need to download pretrained model `LibriTTS_800000.pth.tar`
+Before start you need to download pretrained model `LibriTTS_800000.tar`
 [here](https://drive.google.com/drive/folders/1DOhZGlTLMbbAAFZmZGDdc77kz1PloS7F)
 and put it to `./tts_generation/FastSpeech2/output/ckpt/LibriTTS/800000.pth.tar`
 
 ```
-cd tts_generation
-./install.sh
-cd ..
-python3 generate_tts.py ./texts/text.txt ./tmp/source.txt 205 ./tts
+tts_generation/tts_generation_env/bin/python3 generate_tts.py --input_filename ./output/texts/text.txt 
+                                                              --temp_filename ./tmp/source.txt
+                                                              --speaker_id 205
+                                                              --output_dir ./output/tts
 ```
 
 # Part 3
@@ -49,10 +49,9 @@ python3 generate_tts.py ./texts/text.txt ./tmp/source.txt 205 ./tts
 ## Frames generation
 
 ```
-cd image_generation
-./install.sh
-cd ..
-python3 generate_images.py ./texts/text.txt cuda:0,cuda:1 ./frames
+image_generation/image_generation_env/bin/python3 generate_images.py --input_filename ./output/texts/text.txt 
+                                                                     --devices cuda:0,cuda:1
+                                                                     --main_dir ./output/frames
 ```
 
 # Part 4

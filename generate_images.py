@@ -6,9 +6,9 @@ from utils import preprocess_prompt
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('prompt_file', type=str, help='text prompt file')
-    parser.add_argument('devices', type=str, help='list of devices e.g. cuda:0,cuda:2,cpu')
-    parser.add_argument('main_dir', type=str, help='directory to save pictures')
+    parser.add_argument('--input_filename', type=str, help='text prompt file', dest="prompt_file")
+    parser.add_argument('--devices', type=str, help='list of devices e.g. cuda:0,cuda:2,cpu', dest="devices")
+    parser.add_argument('--main_dir', type=str, help='directory to save pictures', dest="main_dir")
     args = parser.parse_args()
     devices = args.devices.split(",")
     prompts = preprocess_prompt(open(args.prompt_file).read())
