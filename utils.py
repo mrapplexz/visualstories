@@ -5,7 +5,7 @@ alphabet = set(string.ascii_letters + "',.?!" + string.digits)
 
 
 # 8 слов на сэмпл
-def preprocess_prompt(prompt, words_for_sample=8):
+def preprocess_prompt(prompt, words_for_sample=12):
     last_not_space = True
     line = []
     for char in prompt.strip():
@@ -17,5 +17,5 @@ def preprocess_prompt(prompt, words_for_sample=8):
             line.append(" ")
     words = "".join(line).split()
     samples = [" ".join(words[i * words_for_sample:(i + 1) * words_for_sample]) for i in
-               range(math.ceil(len(words) / 8))]
+               range(math.ceil(len(words) / words_for_sample))]
     return samples

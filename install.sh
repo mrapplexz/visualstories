@@ -16,6 +16,11 @@ mkdir output/texts
 python3 -m venv tts_generation/tts_generation_env
 tts_generation/tts_generation_env/bin/pip3 install -r tts_generation/requirements.txt
 unzip tts_generation/FastSpeech2/hifigan/generator_universal.pth.tar -d tts_generation/FastSpeech2/hifigan/
+mkdir tts_generation/FastSpeech2/output
+mkdir tts_generation/FastSpeech2/output/ckpt
+mkdir tts_generation/FastSpeech2/output/ckpt/LibriTTS
+mkdir tts_generation/FastSpeech2/output/result
+mkdir tts_generation/FastSpeech2/output/result/LibriTTS
 mkdir output/tts
 
 # image

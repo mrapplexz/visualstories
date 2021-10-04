@@ -37,9 +37,10 @@ Before start you need to download pretrained model `LibriTTS_800000.tar`
 [here](https://drive.google.com/drive/folders/1DOhZGlTLMbbAAFZmZGDdc77kz1PloS7F)
 and put it to `./tts_generation/FastSpeech2/output/ckpt/LibriTTS/800000.pth.tar`
 
+If your host doesn't provide access to nltk hub, you need to install `cmudict` and `averaged_perceptron_tagger` packages manually with [this instruction](http://www.nltk.org/data.html) 
 ```
 tts_generation/tts_generation_env/bin/python3 generate_tts.py --input_filename ./output/texts/text.txt 
-                                                              --temp_filename ./tmp/source.txt
+                                                              --temp_dir ./tmp
                                                               --speaker_id 205
                                                               --output_dir ./output/tts
 ```
