@@ -1,13 +1,8 @@
-import jukebox
 import torch as t
-import librosa
-import argparse
-import os
-from IPython.display import Audio
-from jukebox.make_models import make_vqvae, make_prior, MODELS, make_model
 from jukebox.hparams import Hyperparams, setup_hparams
-from jukebox.sample import sample_single_window, _sample, \
-    sample_partial_window, upsample, \
+from jukebox.make_models import make_vqvae, make_prior, MODELS
+from jukebox.sample import _sample, \
+    upsample, \
     load_prompts
 from jukebox.utils.dist_utils import setup_dist_from_mpi
 from jukebox.utils.torch_utils import empty_cache

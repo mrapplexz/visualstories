@@ -27,6 +27,13 @@ mkdir output/tts
 python3 -m venv image_generation/image_generation_env
 image_generation/image_generation_env/bin/pip3 install -r image_generation/requirements.txt
 image_generation/image_generation_env/bin/pip3 install -e image_generation/perlin-numpy
-image_generation/image_generation_env/bin/pip3 install -e image_generation/diffvg
+cd image_generation/diffvg
+../image_generation_env/bin/python3 setup.py install
+cd ../..
 mkdir output/frames
+
+# music
+python3 -m venv music_generation/music_generation_env
+music_generation/music_generation_env/bin/pip3 install -e music_generation/jukebox-opt
+mkdir output/music
 
