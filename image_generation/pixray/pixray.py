@@ -1116,7 +1116,7 @@ def do_video(args):
     frames = []
     tqdm.write('Generating video...')
     for i in range(init_frame,last_frame): #
-        frames.append(Image.open(f'./steps/{args.part_n}/frame_{i:04d}.png'))
+        frames.append(Image.open(f'{args.main_dir}/{args.part_n}/frame_{i:04d}.png'))
 
     #fps = last_frame/10
     fps = np.clip(total_frames/length,min_fps,max_fps)
@@ -1475,7 +1475,7 @@ def process_args(vq_parser, namespace=None, do_both=False):
 
     # Make video steps directory
     if args.make_video or args.make_frames:
-        os.makedirs(f'steps/{args.part_n}', exist_ok=True)
+        os.makedirs(f'{args.main_dir}/{args.part_n}', exist_ok=True)
 
     if args.learning_rate_drops is None:
         args.learning_rate_drops = []
