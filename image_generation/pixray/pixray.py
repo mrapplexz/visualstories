@@ -1206,6 +1206,7 @@ def setup_parser():
     vq_parser.add_argument("-vid",  "--video", type=bool, help="Create video frames?", default=False, dest='make_video')
     vq_parser.add_argument("-frm",  "--frames", type=bool, help="Create video frames only?", default=False, dest='make_frames')
     vq_parser.add_argument("-pn",   "--part_n", type=int, help="Part number to save", default=0, dest='part_n')
+    vq_parser.add_argument("-md",   "--main_dir", type=int, help="Main directory path", default=0, dest='main_dir')
     vq_parser.add_argument("-d",    "--deterministic", type=bool, help="Enable cudnn.deterministic?", default=False, dest='cudnn_determinism')
     vq_parser.add_argument("-dr",   "--drawer", type=str, help="clipdraw, pixeldraw, etc", default="vqgan", dest='drawer')
     vq_parser.add_argument("-st",   "--strokes", type=int, help="clipdraw strokes", default=1024, dest='strokes')
