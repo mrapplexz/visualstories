@@ -6,7 +6,7 @@ from jukebox.sample import _sample, \
     load_prompts
 from jukebox.utils.dist_utils import setup_dist_from_mpi
 from jukebox.utils.torch_utils import empty_cache
-
+import subprocess
 
 def generate(args):
     rank, local_rank, device = setup_dist_from_mpi()
@@ -17,7 +17,6 @@ def generate(args):
     hps = Hyperparams()
     hps.sr = 44100
     hps.n_samples = 3
-    # Сюда будут сохраняться мелодии
     hps.name = args.save_path
     chunk_size = 16 if model in ('5b', '5b_lyrics') else 32
     max_batch_size = 2 if model in ('5b', '5b_lyrics') else 16
@@ -37,18 +36,18 @@ def generate(args):
         dict(mode=mode, codes_file=codes_file, audio_file=audio_file,
              prompt_length_in_seconds=prompt_length_in_seconds))
 
-    sample_length_in_seconds = args.sample_len  # Длина мелодии в секундах
+    sample_length_in_seconds = args.sample_len
     hps.sample_length = (int(sample_length_in_seconds * hps.sr) // top_prior.raw_to_tokens) * top_prior.raw_to_tokens
     assert hps.sample_length >= top_prior.n_ctx * top_prior.raw_to_tokens, f'Please choose a larger sampling rate'
 
-    metas = [dict(artist=artist,  # Музыкант
-                  genre=music_genre,  # Жанр
+    metas = [dict(artist=artist,
+                  genre=music_genre,
                   total_length=hps.sample_length,
                   offset=0,
                   lyrics="""""",
                   ),
              ] * hps.n_samples
-    labels = [None, None, top_prior.labeller.get_batch_labels(metas, 'cuda')]
+    labels = [None, None, top_prior.labeller.get_batch_labels(metas, device)]
 
     sampling_temperature = .98
 
@@ -64,12 +63,12 @@ def generate(args):
                             max_batch_size=max_batch_size, chunk_size=chunk_size)]
 
     if sample_hps.mode == 'ancestral':
-        zs = [t.zeros(hps.n_samples, 0, dtype=t.long, device='cuda') for _ in range(len(priors))]
+        zs = [t.zeros(hps.n_samples, 0, dtype=t.long, device=device) for _ in range(len(priors))]
         zs = _sample(zs, labels, sampling_kwargs, [None, None, top_prior], [2], hps)
     elif sample_hps.mode == 'upsample':
         assert sample_hps.codes_file is not None
         # Load codes.
-        data = t.load(sample_hps.codes_file, map_location='cuda')
+        data = t.load(sample_hps.codes_file, map_location=device)
         zs = [z.cpu() for z in data['zs']]
         assert zs[-1].shape[0] == hps.n_samples, f"Expected bs = {hps.n_samples}, got {zs[-1].shape[0]}"
         del data
@@ -78,7 +77,7 @@ def generate(args):
         assert sample_hps.audio_file is not None
         audio_files = sample_hps.audio_file.split(',')
         duration = (
-                               int(sample_hps.prompt_length_in_seconds * hps.sr) // top_prior.raw_to_tokens) * top_prior.raw_to_tokens
+                           int(sample_hps.prompt_length_in_seconds * hps.sr) // top_prior.raw_to_tokens) * top_prior.raw_to_tokens
         x = load_prompts(audio_files, duration, hps)
         zs = top_prior.encode(x, start_level=0, end_level=len(priors), bs_chunks=x.shape[0])
         zs = _sample(zs, labels, sampling_kwargs, [None, None, top_prior], [2], hps)
@@ -89,10 +88,14 @@ def generate(args):
         del top_prior
         empty_cache()
         top_prior = None
-    upsamplers = [make_prior(setup_hparams(prior, dict()), vqvae, 'cuda') for prior in priors[:-1]]
-    labels[:2] = [prior.labeller.get_batch_labels(metas, 'cuda') for prior in upsamplers]
+    upsamplers = [make_prior(setup_hparams(prior, dict()), vqvae, device) for prior in priors[:-1]]
+    labels[:2] = [prior.labeller.get_batch_labels(metas, device) for prior in upsamplers]
 
     zs = upsample(zs, labels, sampling_kwargs, [*upsamplers, top_prior], hps)
 
     del upsamplers
     empty_cache()
+    subprocess.run(f"mv {args.save_path}/level_2/item_0.wav {args.save_path}", shell=True)
+    subprocess.run(f"mv {args.save_path}/level_2/item_1.wav {args.save_path}", shell=True)
+    subprocess.run(f"mv {args.save_path}/level_2/item_2.wav {args.save_path}", shell=True)
+    subprocess.run(f"rm -rf {args.save_path}/level_0 {args.save_path}/level_1 {args.save_path}/level_2", shell=True)
