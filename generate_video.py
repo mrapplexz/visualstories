@@ -1,4 +1,4 @@
-from video_generaion.generator import generate
+from video_generation.generator import generate
 import argparse
 
 if __name__ == '__main__':
