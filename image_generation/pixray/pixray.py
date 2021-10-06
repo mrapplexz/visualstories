@@ -24,7 +24,7 @@ torch.backends.cudnn.benchmark = False		# NR: True is a bit faster, but can lead
 from torch_optimizer import DiffGrad, AdamP, RAdam
 from perlin_numpy import generate_fractal_noise_2d
 
-from CLIP import clip
+import clip
 import kornia
 import kornia.augmentation as K
 import numpy as np

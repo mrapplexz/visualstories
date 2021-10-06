@@ -24,4 +24,5 @@ def generate_parallel(prompts, devices, main_dir):
     results = [pool.apply_async(generate_parallel_worker, (free_gpus, prompt, i, main_dir)) for i, prompt in enumerate(prompts)]
     for result in results:
         result.wait()
+        print(result.get())
     print('Done all the work!')

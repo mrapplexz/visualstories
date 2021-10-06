@@ -3,6 +3,7 @@
 # Part 0
 
 ## Preparation
+After you add CUDA binaries to `PATH` and `LD_LIBRARY_PATH` you can install this project:
 ```bash
 git clone git@github.com:mrapplexz/aiijc-creative-imagegen.git
 cd aiijc-creative-imagegen
@@ -14,7 +15,7 @@ cd aiijc-creative-imagegen
 ## Text generation
 
 If your host doesn't provide access to huggingface hub, download 
-`pytorch_model.bin`,`tokenizer_config.json`,`vocab.json`,`config.json`,`special_tokens_map.json`, `merges.txt` [here](https://huggingface.co/EleutherAI/gpt-neo-2.7B) before
+`pytorch_model.bin`,`tokenizer_config.json`,`vocab.json`,`config.json`,`special_tokens_map.json`, `merges.txt` [here](https://huggingface.co/EleutherAI/gpt-neo-2.7B) 
 and start with  `--local_model MODEL_PATH`
 ```bash
 text_generation/text_generation_env/bin/python3 generate_text.py --device cuda:0                             \
@@ -48,6 +49,8 @@ tts_generation/tts_generation_env/bin/python3 generate_tts.py --input_filename .
 # Part 3
 
 ## Frames generation
+
+If your host doesn't provide access to OpenAI hub, you need to download [RN50.pt](https://openaipublic.azureedge.net/clip/models/afeb0e10f9e5a86da6080e35cf09123aca3b358a0c3e3b6c78a7b63bc04b6762/RN50.pt) , [ViT-B-16.pt](https://openaipublic.azureedge.net/clip/models/5806e77cd80f8b59890b7e101eabd078d9fb84e6937f9e85e4ecb61988df416f/ViT-B-16.pt) , [ViT-B-32.pt](https://openaipublic.azureedge.net/clip/models/40d365715913c9da98579312b702a82c18be219cc2a73407c4526f58eba950af/ViT-B-32.pt) and put them to `~/cache/clip` 
 
 ```bash
 image_generation/image_generation_env/bin/python3 generate_images.py --input_filename ./output/texts/text.txt       \

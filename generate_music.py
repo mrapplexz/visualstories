@@ -1,4 +1,5 @@
 import argparse
+from music_generation.generator import generate
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Script for music generation')
@@ -9,3 +10,4 @@ if __name__ == '__main__':
     parser.add_argument("--sample_len", type=int, default=30, help="length of melody in seconds", dest="sample_len")
 
     args = parser.parse_args()
+    generate(args)
