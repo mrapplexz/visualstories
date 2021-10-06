@@ -1,12 +1,12 @@
-# VideoStories generation
+# VisualStories generation
 
 # Part 0
 
 ### Preparation
 After you add CUDA binaries to `PATH` and `LD_LIBRARY_PATH` you can install this project:
 ```bash
-git clone git@github.com:mrapplexz/aiijc-creative-imagegen.git
-cd aiijc-creative-imagegen
+git clone git@github.com:mrapplexz/aiijc-visualstories.git
+cd aiijc-visualstories
 ./install.sh
 ```
 
