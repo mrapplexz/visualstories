@@ -1,5 +1,7 @@
 # VisualStories generation
 
+Overview on [Medium](http://medium.com/@gleb.shnshn/how-to-create-visual-stories-with-ai-bdaf1772e94c)
+
 # Part 0
 
 ### Preparation
